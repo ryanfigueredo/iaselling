@@ -1,0 +1,43 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { XCircle, ArrowLeft } from 'lucide-react'
+
+export default function PaymentFailure() {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 bg-dark-bg">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(239,68,68,0.08),transparent)]" />
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative glass-strong rounded-3xl p-8 md:p-12 max-w-xl w-full text-center neon-border-strong border border-white/[0.08]"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+          className="w-20 h-20 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center mx-auto mb-6"
+        >
+          <XCircle className="w-10 h-10 text-red-400" strokeWidth={1.75} />
+        </motion.div>
+        <h1 className="font-display font-bold text-3xl md:text-4xl mb-4 text-red-400">
+          Pagamento Não Aprovado
+        </h1>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          O pagamento não foi processado. Por favor, tente novamente.
+        </p>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-neon-green text-dark-bg font-display font-semibold rounded-xl hover:bg-neon-green-dark transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" strokeWidth={2} />
+            Tentar Novamente
+          </Link>
+        </motion.div>
+      </motion.div>
+    </div>
+  )
+}
