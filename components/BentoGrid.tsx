@@ -43,7 +43,7 @@ const directAccessTools = [
   'TurboScribe', 'Piclumen', 'Digen AI', 'Remini', 'SORA', 'SORA MAX', 'You.com',
 ]
 
-const goVIPTools = [
+const requestTools = [
   { name: 'Envato Elements', limit: '50/dia' },
   { name: 'StoryBlocks', limit: '50/dia' },
   { name: 'Artgrid', limit: '20/dia' },
@@ -102,7 +102,7 @@ export default function BentoGrid() {
             Ferramentas Incluídas
           </h2>
           <p className="text-gray-400 text-lg max-w-xl mx-auto">
-            Acesso direto online e solicitação via GoVIP
+            Acesso direto online e solicitação direta
           </p>
         </motion.div>
 
@@ -148,7 +148,7 @@ export default function BentoGrid() {
           </motion.div>
         </div>
 
-        {/* GoVIP Tools */}
+        {/* Request Tools */}
         <div>
           <motion.div
             initial={{ opacity: 0, x: -10 }}
@@ -160,7 +160,7 @@ export default function BentoGrid() {
               <Package className="w-5 h-5 text-neon-green" strokeWidth={1.75} />
             </div>
             <h3 className="font-display font-semibold text-2xl text-neon-green">
-              Solicitação Direta via GoVIP
+              Solicitação Direta
             </h3>
           </motion.div>
           
@@ -171,7 +171,7 @@ export default function BentoGrid() {
             viewport={{ once: true, margin: '-40px' }}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4"
           >
-            {goVIPTools.map((tool) => (
+            {requestTools.map((tool) => (
               <motion.div
                 key={tool.name}
                 variants={itemVariants}

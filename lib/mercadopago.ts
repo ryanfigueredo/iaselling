@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago'
+import { MercadoPagoConfig, Payment } from 'mercadopago'
 
 // Inicializar cliente do Mercado Pago
 export function getMercadoPagoClient() {
@@ -19,34 +19,40 @@ export function getMercadoPagoClient() {
   return client
 }
 
-export async function createPaymentPreference(
-  title: string,
-  price: number,
-  email?: string
+export async function createPixPayment(
+  amount: number,
+  description: string,
+  payerEmail: string,
+  payerFirstName: string,
+  payerLastName: string,
+  payerDocument: string
 ) {
   const client = getMercadoPagoClient()
-  const preference = new Preference(client)
+  const payment = new Payment(client)
 
   const paymentData = {
-    items: [
-      {
-        id: 'govip-beta',
-        title: title,
-        quantity: 1,
-        unit_price: price,
-        currency_id: 'BRL',
+    transaction_amount: amount,
+    description: description,
+    payment_method_id: 'pix',
+    payer: {
+      email: payerEmail,
+      first_name: payerFirstName,
+      last_name: payerLastName,
+      identification: {
+        type: 'CPF',
+        number: payerDocument.replace(/\D/g, ''),
       },
-    ],
-    back_urls: {
-      success: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/payment/success`,
-      failure: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/payment/failure`,
-      pending: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/payment/pending`,
     },
-    auto_return: 'approved' as const,
-    notification_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/webhook`,
-    payer: email ? { email } : undefined,
   }
 
-  const response = await preference.create({ body: paymentData })
+  const response = await payment.create({ body: paymentData })
   return response
+}
+
+export async function getPaymentStatus(paymentId: string) {
+  const client = getMercadoPagoClient()
+  const payment = new Payment(client)
+  
+  const paymentData = await payment.get({ id: paymentId })
+  return paymentData
 }

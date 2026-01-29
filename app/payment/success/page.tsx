@@ -39,7 +39,7 @@ function SuccessContent() {
           Pagamento Aprovado!
         </h1>
         <p className="text-gray-300 mb-6 leading-relaxed">
-          Seu pagamento foi processado com sucesso. Você tem acesso completo ao GoVIP Plano Beta.
+          Seu pagamento foi processado com sucesso. Você tem acesso completo ao Acesso IA Premium.
         </p>
         {paymentId && (
           <p className="text-sm text-gray-500 mb-8 font-mono">ID: {paymentId}</p>
