@@ -22,6 +22,11 @@ export default function Home() {
     localStorage.setItem('payment_approved', 'true')
   }
 
+  const handleWhatsAppClick = () => {
+    setHasPaid(false)
+    localStorage.removeItem('payment_approved')
+  }
+
   return (
     <main className="min-h-screen bg-dark-bg text-white">
       <Header />
@@ -30,9 +35,9 @@ export default function Home() {
         <Features />
         <BentoGrid />
         <SecurityStrip />
-        <Pricing onPaymentSuccess={handlePaymentSuccess} />
+        <Pricing hasPaid={hasPaid} onPaymentSuccess={handlePaymentSuccess} onWhatsAppClick={handleWhatsAppClick} />
       </div>
-      {hasPaid && <ContactButton />}
+      {hasPaid && <ContactButton onWhatsAppClick={handleWhatsAppClick} />}
     </main>
   )
 }

@@ -3,7 +3,11 @@
 import { motion } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
 
-export default function ContactButton() {
+interface ContactButtonProps {
+  onWhatsAppClick?: () => void
+}
+
+export default function ContactButton({ onWhatsAppClick }: ContactButtonProps) {
   const WHATSAPP_LINK = process.env.NEXT_PUBLIC_WHATSAPP_LINK || 'https://wa.me/5511999999999'
 
   return (
@@ -11,6 +15,7 @@ export default function ContactButton() {
       href={WHATSAPP_LINK}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={onWhatsAppClick}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.08 }}

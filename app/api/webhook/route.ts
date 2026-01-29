@@ -54,6 +54,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  return NextResponse.json({ status: 'ok' })
+export async function GET(request: NextRequest) {
+  // Aceita GET para teste IPN do Mercado Pago (?topic=payment&id=123456)
+  const { searchParams } = new URL(request.url)
+  const topic = searchParams.get('topic')
+  const id = searchParams.get('id')
+  return NextResponse.json({ status: 'ok', topic, id })
 }

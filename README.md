@@ -59,6 +59,15 @@ npm start
 3. Obtenha seu **Access Token**
 4. Adicione no arquivo `.env`
 
+### 🧪 Testar antes de lançar
+
+**Use credenciais de TESTE** (começam com `TEST-`) para desenvolver. Veja o guia completo em **[TESTE.md](./TESTE.md)** com:
+
+- Cartões de teste (Mastercard, Visa, Elo, etc.)
+- Como simular pagamento aprovado (nome do titular: `APRO`)
+- Cenários de rejeição e pendência
+- Checklist antes de ir para produção
+
 ### Webhook
 
 Para receber notificações de pagamento:

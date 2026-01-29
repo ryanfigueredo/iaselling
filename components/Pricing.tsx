@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CreditCard, Check, Sparkles } from "lucide-react";
+import { CreditCard, Check, Sparkles, CheckCircle2, MessageCircle } from "lucide-react";
 import CheckoutModal from "./CheckoutModal";
 
 // Preço de venda (ajuste aqui quando necessário)
 const SELLING_PRICE = 150.0;
 
+const WHATSAPP_LINK = process.env.NEXT_PUBLIC_WHATSAPP_LINK || "https://wa.me/5511999999999";
+
 interface PricingProps {
+  hasPaid?: boolean;
   onPaymentSuccess: () => void;
+  onWhatsAppClick?: () => void;
 }
 
-export default function Pricing({ onPaymentSuccess }: PricingProps) {
+export default function Pricing({ hasPaid = false, onPaymentSuccess, onWhatsAppClick }: PricingProps) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const handlePurchase = () => {
@@ -43,6 +47,37 @@ export default function Pricing({ onPaymentSuccess }: PricingProps) {
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-neon-green/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative">
+            {hasPaid ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col items-center text-center py-4"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-neon-green/20 border-2 border-neon-green/50 flex items-center justify-center mb-6">
+                  <CheckCircle2 className="w-10 h-10 text-neon-green" strokeWidth={2} />
+                </div>
+                <h2 className="heading-display text-2xl md:text-3xl text-white mb-2">
+                  Pagamento aprovado!
+                </h2>
+                <p className="text-gray-400 mb-8 max-w-sm">
+                  Retire seu acesso através do WhatsApp. Clique no botão abaixo para falar com nossa equipe.
+                </p>
+                <motion.a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onWhatsAppClick}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-xl bg-[#25D366] text-white font-display font-semibold text-lg hover:bg-[#20BA5A] transition-colors shadow-lg"
+                >
+                  <MessageCircle className="w-6 h-6" strokeWidth={2} />
+                  Abrir WhatsApp e retirar acesso
+                </motion.a>
+              </motion.div>
+            ) : (
+              <>
             <div className="flex items-center justify-center gap-2 mb-6">
               <Sparkles
                 className="w-5 h-5 text-neon-green"
@@ -97,6 +132,8 @@ export default function Pricing({ onPaymentSuccess }: PricingProps) {
                 ))}
               </ul>
             </div>
+            </>
+            )}
           </div>
         </motion.div>
       </div>
