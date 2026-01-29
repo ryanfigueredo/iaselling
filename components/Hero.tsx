@@ -141,9 +141,7 @@ export default function Hero() {
                   </svg>
                 </div>
                 <p className="text-sm font-medium">Vídeo explicativo</p>
-                <p className="text-xs mt-1 text-gray-600">
-                  Configurar NEXT_PUBLIC_HERO_VIDEO_URL no .env
-                </p>
+                <p className="text-xs mt-1 text-gray-600">Video em breve</p>
               </div>
             )}
           </div>
@@ -160,8 +158,8 @@ export default function Hero() {
         >
           <p className="text-gray-300 leading-relaxed">
             Acesso direto e seguro a plataformas online através de nossa
-            infraestrutura. Após aprovação do pagamento, seu acesso será
-            enviado via WhatsApp.
+            infraestrutura. Após aprovação do pagamento, seu acesso será enviado
+            via WhatsApp.
           </p>
         </motion.div>
       </div>
