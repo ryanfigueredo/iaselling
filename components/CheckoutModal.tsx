@@ -271,6 +271,7 @@ export default function CheckoutModal({ isOpen, onClose, amount, onPaymentSucces
 
                 <div className="flex justify-center">
                   <div className="glass rounded-xl p-4 border border-white/[0.06]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`data:image/png;base64,${pixData.qrCodeBase64}`}
                       alt="QR Code PIX"
