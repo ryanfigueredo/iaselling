@@ -515,11 +515,6 @@ function CardPaymentForm({
   const [cardType, setCardType] = useState<'credit' | 'debit' | null>(null)
   const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY
 
-  // Reset loading when switching card type (Brick will remount)
-  useEffect(() => {
-    if (cardType) setLoading(true)
-  }, [cardType])
-
   if (!publicKey) {
     return (
       <div className="py-8 text-center text-gray-400">
@@ -558,19 +553,17 @@ function CardPaymentForm({
         </button>
       </div>
 
-      {!cardType ? (
-        <p className="text-gray-400 text-sm text-center py-4">Escolha crédito ou débito acima para continuar.</p>
-      ) : (
-        <>
-          <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
-            <CreditCard className="w-4 h-4 text-neon-green" strokeWidth={1.75} />
-            <span className="text-sm font-medium text-white">
-              Pagando com: <span className="text-neon-green">{cardType === 'credit' ? 'Cartão de crédito (até 3x)' : 'Cartão de débito (à vista)'}</span>
-            </span>
-          </div>
-          <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
+      {cardType && (
+        <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
+          <CreditCard className="w-4 h-4 text-neon-green" strokeWidth={1.75} />
+          <span className="text-sm font-medium text-white">
+            Pagando com: <span className="text-neon-green">{cardType === 'credit' ? 'Cartão de crédito (até 3x)' : 'Cartão de débito (à vista)'}</span>
+          </span>
+        </div>
+      )}
+      <p className="text-gray-400 text-xs">Crédito: parcelas em até 3x. Débito: à vista. As opções aparecem após digitar o número do cartão.</p>
+      <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
         <CardPayment
-        key={cardType}
         id="cardPaymentBrick_container"
         initialization={{
           amount,
@@ -586,10 +579,7 @@ function CardPaymentForm({
           ...({ hideFormTitle: true } as object),
           paymentMethods: {
             minInstallments: 1,
-            maxInstallments: cardType === 'credit' ? 3 : 1,
-            types: {
-              included: cardType === 'credit' ? ['credit_card'] : ['debit_card'],
-            },
+            maxInstallments: 3,
           },
           visual: {
             style: {
@@ -618,9 +608,14 @@ function CardPaymentForm({
         }}
         locale="pt-BR"
         onReady={() => setLoading(false)}
-        onError={(err) => {
+        onError={(err: any) => {
           console.error('Brick error:', err)
-          onError(err?.message || 'Erro ao carregar formulário de pagamento')
+          const msg = err?.message || err?.cause?.message || String(err)
+          if (msg.includes('payment_method_not_in_allowed_types')) {
+            onError('Tipo de cartão não permitido. Tente outro cartão ou forma de pagamento.')
+          } else {
+            onError(msg || 'Erro ao carregar formulário de pagamento')
+          }
         }}
         onSubmit={async (brickFormData: any) => {
           setLoading(true)
@@ -656,7 +651,13 @@ function CardPaymentForm({
               }),
             })
             const data = await response.json()
-            if (data.error) throw new Error(data.error)
+            if (data.error) {
+              const errMsg = String(data.error)
+              if (errMsg.includes('payment_method_not_in_allowed_types')) {
+                throw new Error('Tipo de cartão não permitido. Verifique se está usando crédito ou débito corretamente.')
+              }
+              throw new Error(errMsg)
+            }
             if (data.status === 'approved') onSuccess(data.id?.toString?.() || data.id)
             else {
               const detail = data.status_detail || 'Pagamento não aprovado'
@@ -669,6 +670,8 @@ function CardPaymentForm({
             const msg = err.message || 'Erro ao processar pagamento'
             if (msg.includes('cc_rejected_call_for_authorize') || msg.includes('call_for_authorize')) {
               onError('Seu banco exige autorização. Ligue para o banco ou tente com cartão de débito.')
+            } else if (msg.includes('payment_method_not_in_allowed_types')) {
+              onError('Tipo de cartão não permitido. Tente outro cartão ou forma de pagamento.')
             } else {
               onError(msg)
             }
@@ -684,8 +687,6 @@ function CardPaymentForm({
         </div>
       )}
     </div>
-        </>
-      )}
     </div>
   )
 }
