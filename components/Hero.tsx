@@ -65,10 +65,20 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed"
           >
             Navegação anônima, segura e controlada para mais de 30 plataformas
             premium. Acesso enviado via WhatsApp após aprovação.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-base md:text-lg text-neon-green/90 max-w-2xl mx-auto mb-10 font-medium"
+          >
+            Inclui ChatGPT Pro, Midjourney, Canva PRO, Adobe Stock, Shutterstock,
+            HeyGen, SORA, Grok, Gamma e muito mais.
           </motion.p>
 
           <motion.div

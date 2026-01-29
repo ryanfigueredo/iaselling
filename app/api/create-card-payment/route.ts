@@ -16,12 +16,23 @@ export async function POST(request: NextRequest) {
       payerDocument,
     } = body
 
-    if (!token || !paymentMethodId || !amount || !payerEmail || !payerFirstName || !payerLastName || !payerDocument) {
+    const missing: string[] = []
+    if (!token) missing.push('token do cartão')
+    if (!paymentMethodId) missing.push('tipo do cartão')
+    if (!amount) missing.push('valor')
+    if (!payerEmail) missing.push('email')
+    if (!payerFirstName) missing.push('nome')
+    if (!payerDocument) missing.push('CPF')
+
+    if (missing.length > 0) {
       return NextResponse.json(
-        { error: 'Todos os campos são obrigatórios' },
+        { error: `Campos obrigatórios: ${missing.join(', ')}` },
         { status: 400 }
       )
     }
+
+    const firstName = String(payerFirstName).trim() || 'Cliente'
+    const lastName = String(payerLastName || '').trim()
 
     const cleanDocument = String(payerDocument).replace(/\D/g, '')
     if (cleanDocument.length !== 11) {
@@ -38,8 +49,8 @@ export async function POST(request: NextRequest) {
       amount: Number(amount),
       description: description || 'Acesso IA Premium',
       payerEmail,
-      payerFirstName,
-      payerLastName,
+      payerFirstName: firstName,
+      payerLastName: lastName || firstName,
       payerDocument: cleanDocument,
     })
 

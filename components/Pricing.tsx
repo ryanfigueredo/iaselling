@@ -50,7 +50,10 @@ export default function Pricing({ onPaymentSuccess }: PricingProps) {
             <h2 className="heading-display text-4xl md:text-5xl text-center mb-2 text-white">
               Acesso IA
             </h2>
-            <p className="text-center text-gray-400 mb-8">Acesso completo às ferramentas</p>
+            <p className="text-center text-gray-400 mb-4">Acesso completo às ferramentas</p>
+            <p className="text-center text-neon-green/90 text-sm font-medium mb-8">
+              ChatGPT Pro • Midjourney • Canva PRO • Adobe Stock • Shutterstock • HeyGen • SORA • Grok • Gamma + 20+ IAs
+            </p>
             
             <div className="flex flex-col items-center mb-8">
               <div className="flex items-baseline gap-1">

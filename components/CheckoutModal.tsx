@@ -567,19 +567,33 @@ function CardPaymentForm({
         onSubmit={async (brickFormData: any) => {
           setLoading(true)
           try {
+            const payer = brickFormData.payer || {}
+            const payerEmail = payer.email || formData.email
+            let payerFirstName = payer.first_name || payer.firstName || formData.firstName
+            let payerLastName = payer.last_name || payer.lastName || formData.lastName
+            if (!payerFirstName && !payerLastName) {
+              const fullName = `${formData.firstName} ${formData.lastName}`.trim() || 'Cliente'
+              const parts = fullName.split(/\s+/)
+              payerFirstName = parts[0] || 'Cliente'
+              payerLastName = parts.slice(1).join(' ') || ''
+            }
+            payerFirstName = payerFirstName || 'Cliente'
+            payerLastName = payerLastName || ''
+            const payerDocument = payer.identification?.number || formData.document.replace(/\D/g, '')
+
             const response = await fetch('/api/create-card-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 token: brickFormData.token,
-                paymentMethodId: brickFormData.payment_method_id,
-                issuerId: brickFormData.issuer_id,
+                paymentMethodId: brickFormData.payment_method_id || brickFormData.paymentMethodId,
+                issuerId: brickFormData.issuer_id || brickFormData.issuerId || '0',
                 amount,
                 description: 'Acesso IA Premium',
-                payerEmail: brickFormData.payer?.email,
-                payerFirstName: brickFormData.payer?.first_name,
-                payerLastName: brickFormData.payer?.last_name,
-                payerDocument: brickFormData.payer?.identification?.number,
+                payerEmail,
+                payerFirstName,
+                payerLastName,
+                payerDocument,
               }),
             })
             const data = await response.json()
