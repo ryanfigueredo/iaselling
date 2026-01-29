@@ -1,35 +1,35 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { CreditCard, Check, Sparkles } from 'lucide-react'
-import CheckoutModal from './CheckoutModal'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { CreditCard, Check, Sparkles } from "lucide-react";
+import CheckoutModal from "./CheckoutModal";
 
 // Preço de venda (ajuste aqui quando necessário)
-const SELLING_PRICE = 150.0
+const SELLING_PRICE = 150.0;
 
 interface PricingProps {
-  onPaymentSuccess: () => void
+  onPaymentSuccess: () => void;
 }
 
 export default function Pricing({ onPaymentSuccess }: PricingProps) {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const handlePurchase = () => {
-    setIsCheckoutOpen(true)
-  }
+    setIsCheckoutOpen(true);
+  };
 
   const handlePaymentSuccess = () => {
-    onPaymentSuccess()
-    setIsCheckoutOpen(false)
-  }
+    onPaymentSuccess();
+    setIsCheckoutOpen(false);
+  };
 
   const notes = [
-    'Todos os sites do Plano BETA são testados e monitorados constantemente.',
-    'Alguns serviços podem ser ajustados ou removidos conforme limitações.',
-    'Adobe Stock e Shutterstock sob observação; arquivos podem ser solicitados via solicitação direta.',
-    'A assinatura não inclui licenças estendidas ou aprimoradas.',
-  ]
+    "Todos os sites do Plano BETA são testados e monitorados constantemente.",
+    "Alguns serviços podem ser ajustados ou removidos conforme limitações.",
+    "Adobe Stock e Shutterstock sob observação; arquivos podem ser solicitados via solicitação direta.",
+    "A assinatura não inclui licenças estendidas ou aprimoradas.",
+  ];
 
   return (
     <section id="pricing" className="py-24 px-4 relative">
@@ -44,23 +44,33 @@ export default function Pricing({ onPaymentSuccess }: PricingProps) {
           <div className="absolute top-0 right-0 w-64 h-64 bg-neon-green/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative">
             <div className="flex items-center justify-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-neon-green" strokeWidth={1.75} />
-              <span className="text-sm font-medium text-neon-green uppercase tracking-wider">Plano Beta</span>
+              <Sparkles
+                className="w-5 h-5 text-neon-green"
+                strokeWidth={1.75}
+              />
+              <span className="text-sm font-medium text-neon-green uppercase tracking-wider">
+                Plano Beta
+              </span>
             </div>
             <h2 className="heading-display text-4xl md:text-5xl text-center mb-2 text-white">
               Acesso IA
             </h2>
-            <p className="text-center text-gray-400 mb-4">Acesso completo às ferramentas</p>
-            <p className="text-center text-neon-green/90 text-sm font-medium mb-8">
-              ChatGPT Pro • Midjourney • Canva PRO • Adobe Stock • Shutterstock • HeyGen • SORA • Grok • Gamma + 20+ IAs
+            <p className="text-center text-gray-400 mb-4">
+              Acesso completo às ferramentas
             </p>
-            
+            <p className="text-center text-neon-green/90 text-sm font-medium mb-8">
+              ChatGPT Pro • Midjourney • Canva PRO • Adobe Stock • Shutterstock
+              • HeyGen • SORA • Grok • Gamma + 20+ IAs
+            </p>
+
             <div className="flex flex-col items-center mb-8">
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl md:text-6xl font-display font-bold text-neon-green">R$ {SELLING_PRICE.toFixed(0)}</span>
+                <span className="text-5xl md:text-6xl font-display font-bold text-neon-green">
+                  R$ {SELLING_PRICE.toFixed(0)}
+                </span>
                 <span className="text-2xl text-gray-500">,00</span>
               </div>
-              <p className="text-gray-500 text-sm mt-1">Pagamento único</p>
+              <p className="text-gray-500 text-sm mt-1">Acesso Mensal</p>
             </div>
 
             <motion.button
@@ -98,5 +108,5 @@ export default function Pricing({ onPaymentSuccess }: PricingProps) {
         onPaymentSuccess={handlePaymentSuccess}
       />
     </section>
-  )
+  );
 }

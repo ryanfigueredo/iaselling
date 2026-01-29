@@ -583,6 +583,7 @@ function CardPaymentForm({
           },
         }}
         customization={{
+          ...({ hideFormTitle: true } as object),
           paymentMethods: {
             minInstallments: 1,
             maxInstallments: cardType === 'credit' ? 3 : 1,
