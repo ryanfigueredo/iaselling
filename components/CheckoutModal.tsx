@@ -507,6 +507,7 @@ function CardPaymentForm({
   onError: (msg: string) => void
 }) {
   const [loading, setLoading] = useState(false)
+  const [cardType, setCardType] = useState<'credit' | 'debit' | null>(null)
   const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY
 
   if (!publicKey) {
@@ -519,8 +520,36 @@ function CardPaymentForm({
   }
 
   return (
-    <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
-      <CardPayment
+    <div className="space-y-4">
+      <div className="flex gap-3 p-3 rounded-xl glass border border-white/[0.06]">
+        <button
+          type="button"
+          onClick={() => setCardType('credit')}
+          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border transition-all ${
+            cardType === 'credit'
+              ? 'bg-neon-green/20 border-neon-green/50 text-neon-green'
+              : 'bg-neon-green/10 border-neon-green/30 text-neon-green hover:bg-neon-green/15'
+          }`}
+        >
+          <CreditCard className="w-4 h-4" strokeWidth={1.75} />
+          <span className="text-sm font-medium">Crédito (até 3x)</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setCardType('debit')}
+          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border transition-all ${
+            cardType === 'debit'
+              ? 'bg-neon-green/20 border-neon-green/50 text-neon-green'
+              : 'bg-neon-green/10 border-neon-green/30 text-neon-green hover:bg-neon-green/15'
+          }`}
+        >
+          <CreditCard className="w-4 h-4" strokeWidth={1.75} />
+          <span className="text-sm font-medium">Débito (à vista)</span>
+        </button>
+      </div>
+      <p className="text-gray-400 text-sm">Escolha o tipo do seu cartão e preencha os dados abaixo.</p>
+      <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
+        <CardPayment
         id="cardPaymentBrick_container"
         initialization={{
           amount,
@@ -533,6 +562,13 @@ function CardPaymentForm({
           },
         }}
         customization={{
+          paymentMethods: {
+            maxInstallments: 3,
+            minInstallments: 1,
+            types: {
+              included: ['credit_card', 'debit_card'],
+            },
+          },
           visual: {
             style: {
               theme: 'dark',
@@ -599,9 +635,20 @@ function CardPaymentForm({
             const data = await response.json()
             if (data.error) throw new Error(data.error)
             if (data.status === 'approved') onSuccess(data.id?.toString?.() || data.id)
-            else throw new Error(data.status_detail || 'Pagamento não aprovado')
+            else {
+              const detail = data.status_detail || 'Pagamento não aprovado'
+              if (detail.includes('cc_rejected_call_for_authorize') || detail.includes('call_for_authorize')) {
+                throw new Error('Seu banco exige autorização. Ligue para o banco ou tente com cartão de débito.')
+              }
+              throw new Error(detail)
+            }
           } catch (err: any) {
-            onError(err.message || 'Erro ao processar pagamento')
+            const msg = err.message || 'Erro ao processar pagamento'
+            if (msg.includes('cc_rejected_call_for_authorize') || msg.includes('call_for_authorize')) {
+              onError('Seu banco exige autorização. Ligue para o banco ou tente com cartão de débito.')
+            } else {
+              onError(msg)
+            }
           } finally {
             setLoading(false)
           }
@@ -613,6 +660,7 @@ function CardPaymentForm({
           <span>Processando...</span>
         </div>
       )}
+    </div>
     </div>
   )
 }
