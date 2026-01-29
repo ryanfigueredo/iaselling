@@ -67,6 +67,7 @@ export async function createCardPayment(params: {
   payerFirstName: string
   payerLastName: string
   payerDocument: string
+  installments?: number
 }) {
   const client = getMercadoPagoClient()
   const payment = new Payment(client)
@@ -75,7 +76,7 @@ export async function createCardPayment(params: {
     token: params.token,
     transaction_amount: params.amount,
     description: params.description,
-    installments: 1,
+    installments: params.installments ?? 1,
     payment_method_id: params.paymentMethodId,
     payer: {
       email: params.payerEmail,

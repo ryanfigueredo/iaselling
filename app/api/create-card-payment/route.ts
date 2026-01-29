@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       payerFirstName,
       payerLastName,
       payerDocument,
+      installments,
     } = body
 
     const missing: string[] = []
@@ -52,6 +53,7 @@ export async function POST(request: NextRequest) {
       payerFirstName: firstName,
       payerLastName: lastName || firstName,
       payerDocument: cleanDocument,
+      installments: installments ? Number(installments) : 1,
     })
 
     return NextResponse.json({

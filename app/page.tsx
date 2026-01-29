@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Hero from '@/components/Hero'
 import Header from '@/components/Header'
 import BentoGrid from '@/components/BentoGrid'
+import SecurityStrip from '@/components/SecurityStrip'
 import Pricing from '@/components/Pricing'
 import Features from '@/components/Features'
 import ContactButton from '@/components/ContactButton'
@@ -28,6 +29,7 @@ export default function Home() {
         <Hero />
         <Features />
         <BentoGrid />
+        <SecurityStrip />
         <Pricing onPaymentSuccess={handlePaymentSuccess} />
       </div>
       {hasPaid && <ContactButton />}

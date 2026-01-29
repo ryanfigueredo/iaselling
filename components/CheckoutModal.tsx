@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Loader2, QrCode, Copy, CheckCircle2, CreditCard, ArrowLeft } from 'lucide-react'
+import SecurityBadge from './SecurityBadge'
 import { CardPayment } from '@mercadopago/sdk-react'
 import { useSession } from 'next-auth/react'
 
@@ -294,6 +295,7 @@ export default function CheckoutModal({ isOpen, onClose, amount, onPaymentSucces
                     placeholder="000.000.000-00"
                   />
                 </div>
+                <SecurityBadge variant="full" className="my-4" />
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.02 }}
@@ -345,6 +347,7 @@ export default function CheckoutModal({ isOpen, onClose, amount, onPaymentSucces
                   </motion.button>
                 </div>
                 {error && <p className="text-red-400 text-sm">{error}</p>}
+                <SecurityBadge variant="compact" className="mt-2" />
               </motion.form>
             )}
 
@@ -416,6 +419,7 @@ export default function CheckoutModal({ isOpen, onClose, amount, onPaymentSucces
                 animate={{ opacity: 1 }}
                 className="space-y-6"
               >
+                <SecurityBadge variant="compact" />
                 <div className="text-center">
                   <QrCode className="w-16 h-16 text-neon-green mx-auto mb-4" strokeWidth={1.5} />
                   <h3 className="font-display font-semibold text-xl text-white mb-2">Escaneie o QR Code</h3>
@@ -467,6 +471,7 @@ export default function CheckoutModal({ isOpen, onClose, amount, onPaymentSucces
                 animate={{ opacity: 1 }}
                 className="space-y-4"
               >
+                <SecurityBadge variant="compact" />
                 <CardPaymentForm
                   amount={amount}
                   formData={formData}
@@ -510,6 +515,11 @@ function CardPaymentForm({
   const [cardType, setCardType] = useState<'credit' | 'debit' | null>(null)
   const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY
 
+  // Reset loading when switching card type (Brick will remount)
+  useEffect(() => {
+    if (cardType) setLoading(true)
+  }, [cardType])
+
   if (!publicKey) {
     return (
       <div className="py-8 text-center text-gray-400">
@@ -547,9 +557,20 @@ function CardPaymentForm({
           <span className="text-sm font-medium">Débito (à vista)</span>
         </button>
       </div>
-      <p className="text-gray-400 text-sm">Escolha o tipo do seu cartão e preencha os dados abaixo.</p>
-      <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
+
+      {!cardType ? (
+        <p className="text-gray-400 text-sm text-center py-4">Escolha crédito ou débito acima para continuar.</p>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
+            <CreditCard className="w-4 h-4 text-neon-green" strokeWidth={1.75} />
+            <span className="text-sm font-medium text-white">
+              Pagando com: <span className="text-neon-green">{cardType === 'credit' ? 'Cartão de crédito (até 3x)' : 'Cartão de débito (à vista)'}</span>
+            </span>
+          </div>
+          <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
         <CardPayment
+        key={cardType}
         id="cardPaymentBrick_container"
         initialization={{
           amount,
@@ -563,10 +584,10 @@ function CardPaymentForm({
         }}
         customization={{
           paymentMethods: {
-            maxInstallments: 3,
             minInstallments: 1,
+            maxInstallments: cardType === 'credit' ? 3 : 1,
             types: {
-              included: ['credit_card', 'debit_card'],
+              included: cardType === 'credit' ? ['credit_card'] : ['debit_card'],
             },
           },
           visual: {
@@ -624,6 +645,7 @@ function CardPaymentForm({
                 token: brickFormData.token,
                 paymentMethodId: brickFormData.payment_method_id || brickFormData.paymentMethodId,
                 issuerId: brickFormData.issuer_id || brickFormData.issuerId || '0',
+                installments: brickFormData.installments ?? 1,
                 amount,
                 description: 'Acesso IA Premium',
                 payerEmail,
@@ -661,6 +683,8 @@ function CardPaymentForm({
         </div>
       )}
     </div>
+        </>
+      )}
     </div>
   )
 }

@@ -20,6 +20,11 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'Acesso IA - Acesso Premium a Ferramentas Criativas',
   description: 'Acesso exclusivo a mais de 30 plataformas premium de design, IA e criação',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 }
 
 export default function RootLayout({
