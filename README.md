@@ -31,7 +31,8 @@ cp .env.example .env
 ```
 
 Edite o arquivo `.env` e adicione:
-- `MERCADOPAGO_ACCESS_TOKEN` - Seu token de acesso do Mercado Pago
+- `MERCADOPAGO_ACCESS_TOKEN` - Seu token de acesso do Mercado Pago (credenciais privadas)
+- `NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY` - Chave pública do Mercado Pago (para pagamento com cartão - painel MP > Credenciais > Chaves públicas)
 - `NEXT_PUBLIC_BASE_URL` - URL base da aplicação (ex: `https://seusite.com`)
 
 3. Configure os links de contato no componente `ContactButton.tsx`:

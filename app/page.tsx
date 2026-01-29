@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Hero from '@/components/Hero'
+import Header from '@/components/Header'
 import BentoGrid from '@/components/BentoGrid'
 import Pricing from '@/components/Pricing'
 import Features from '@/components/Features'
@@ -22,6 +23,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
+      <Header />
       <div className="relative">
         <Hero />
         <Features />

@@ -1,0 +1,29 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    const purchases = await prisma.purchase.findMany({
+      where: { email: session.user.email.toLowerCase() },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return NextResponse.json({ purchases })
+  } catch (error: any) {
+    console.error('Erro ao buscar compras:', error)
+    return NextResponse.json(
+      { error: error.message || 'Erro ao buscar compras' },
+      { status: 500 }
+    )
+  }
+}

@@ -56,3 +56,46 @@ export async function getPaymentStatus(paymentId: string) {
   const paymentData = await payment.get({ id: paymentId })
   return paymentData
 }
+
+export async function createCardPayment(params: {
+  token: string
+  paymentMethodId: string
+  issuerId: string
+  amount: number
+  description: string
+  payerEmail: string
+  payerFirstName: string
+  payerLastName: string
+  payerDocument: string
+}) {
+  const client = getMercadoPagoClient()
+  const payment = new Payment(client)
+
+  const paymentData: Record<string, unknown> = {
+    token: params.token,
+    transaction_amount: params.amount,
+    description: params.description,
+    installments: 1,
+    payment_method_id: params.paymentMethodId,
+    payer: {
+      email: params.payerEmail,
+      first_name: params.payerFirstName,
+      last_name: params.payerLastName,
+      identification: {
+        type: 'CPF',
+        number: params.payerDocument.replace(/\D/g, ''),
+      },
+    },
+  }
+  if (params.issuerId) {
+    paymentData.issuer_id = Number(params.issuerId)
+  }
+
+  const response = await payment.create({
+    body: paymentData,
+    requestOptions: {
+      idempotencyKey: crypto.randomUUID(),
+    },
+  })
+  return response
+}

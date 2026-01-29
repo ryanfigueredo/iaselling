@@ -1,18 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Rocket, Zap, MessageCircle } from 'lucide-react'
+import { Shield, Zap, MessageCircle } from 'lucide-react'
 
 const features = [
   {
     title: 'Navegação Anônima',
     description: 'Acesso seguro sem expor suas credenciais',
     icon: Shield,
-  },
-  {
-    title: 'Sem Login Necessário',
-    description: 'Use todas as ferramentas sem criar contas',
-    icon: Rocket,
   },
   {
     title: 'Acesso Imediato',

@@ -1,38 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getMercadoPagoClient } from '@/lib/mercadopago'
 import { Payment } from 'mercadopago'
+import { prisma } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { type, data } = body
 
-    // Mercado Pago envia notificações de diferentes tipos
     if (type === 'payment') {
       const paymentId = data.id
 
-      // Buscar informações do pagamento
       const client = getMercadoPagoClient()
       const payment = new Payment(client)
       const paymentData = await payment.get({ id: paymentId })
 
-      // Verificar se o pagamento foi aprovado
       if (paymentData.status === 'approved') {
-        // Aqui você pode:
-        // 1. Salvar no banco de dados
-        // 2. Enviar email de confirmação
-        // 3. Ativar acesso do usuário
-        // 4. Registrar o pagamento
+        const payer = paymentData.payer as any
+        const email = payer?.email
+        const firstName = payer?.first_name || ''
+        const lastName = payer?.last_name || ''
+        const document = payer?.identification?.number || null
 
-        console.log('Pagamento aprovado:', {
-          id: paymentData.id,
-          status: paymentData.status,
-          amount: paymentData.transaction_amount,
-          email: paymentData.payer?.email,
-        })
-
-        // TODO: Implementar lógica de ativação de acesso
-        // Por exemplo, salvar no banco de dados ou enviar para um serviço externo
+        if (email) {
+          try {
+            await prisma.purchase.upsert({
+              where: { paymentId: String(paymentId) },
+              create: {
+                email: email.toLowerCase().trim(),
+                name: `${firstName} ${lastName}`.trim() || 'Cliente',
+                document,
+                paymentId: String(paymentId),
+                amount: paymentData.transaction_amount || 0,
+                type: 'one_time',
+                status: 'approved',
+              },
+              update: {},
+            })
+          } catch (dbError) {
+            console.error('Erro ao salvar compra no DB:', dbError)
+          }
+        }
       }
     }
 
@@ -46,7 +54,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET para verificação do webhook (Mercado Pago pode fazer GET)
 export async function GET() {
   return NextResponse.json({ status: 'ok' })
 }
