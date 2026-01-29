@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { ShoppingBag, LogOut, ArrowLeft } from 'lucide-react'
+import { ShoppingBag, LogOut, ArrowLeft, Shield } from 'lucide-react'
+import { isAdmin } from '@/lib/admin'
 
 export default function ContaPage() {
   const { data: session, status } = useSession()
@@ -137,13 +138,24 @@ export default function ContaPage() {
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="font-display font-bold text-2xl text-white">Minhas Compras</h1>
-          <button
-            onClick={() => signOut()}
-            className="flex items-center gap-2 text-gray-400 hover:text-white"
-          >
-            <LogOut className="w-4 h-4" />
-            Sair
-          </button>
+          <div className="flex items-center gap-4">
+            {isAdmin(session.user?.email) && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neon-green/20 text-neon-green border border-neon-green/50 hover:bg-neon-green/30 font-medium"
+              >
+                <Shield className="w-4 h-4" />
+                Admin
+              </Link>
+            )}
+            <button
+              onClick={() => signOut()}
+              className="flex items-center gap-2 text-gray-400 hover:text-white"
+            >
+              <LogOut className="w-4 h-4" />
+              Sair
+            </button>
+          </div>
         </div>
         <p className="text-gray-400 text-sm mb-6">{session.user?.email}</p>
         {purchases.length === 0 ? (

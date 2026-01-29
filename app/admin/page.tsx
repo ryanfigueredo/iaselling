@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp, ShoppingBag, DollarSign } from 'lucide-react'
-
-const ADMIN_EMAILS = ['ryan@dmtn.com.br', 'arthur@dmtn.com.br']
+import { isAdmin } from '@/lib/admin'
 
 export default function AdminPage() {
   const { data: session, status } = useSession()
@@ -13,7 +12,7 @@ export default function AdminPage() {
   const [total, setTotal] = useState(0)
 
   useEffect(() => {
-    if (session?.user?.email && ADMIN_EMAILS.includes(session.user.email.toLowerCase())) {
+    if (session?.user?.email && isAdmin(session.user.email)) {
       fetch('/api/admin/purchases')
         .then((r) => r.json())
         .then((d) => {
@@ -34,7 +33,7 @@ export default function AdminPage() {
     )
   }
 
-  if (!session?.user?.email || !ADMIN_EMAILS.includes(session.user.email.toLowerCase())) {
+  if (!session?.user?.email || !isAdmin(session.user.email)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-bg px-4">
         <div className="text-center">
