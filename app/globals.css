@@ -81,3 +81,14 @@
     text-wrap: balance;
   }
 }
+
+/* Mercado Pago Card Payment Brick - identidade visual do site */
+#cardPaymentBrick_container {
+  --form-background-color: #0a0a0a;
+  --base-color: #00ff88;
+  --input-border-color: rgba(255, 255, 255, 0.06);
+  --input-focused-border-color: rgba(0, 255, 136, 0.5);
+  --button-background: #00ff88;
+  --button-text-color: #050505;
+  --button-hover-background: #00cc6a;
+}

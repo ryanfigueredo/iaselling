@@ -519,7 +519,7 @@ function CardPaymentForm({
   }
 
   return (
-    <div className="min-h-[300px]">
+    <div className="min-h-[300px] rounded-2xl overflow-hidden [&_#cardPaymentBrick_container]:rounded-2xl">
       <CardPayment
         id="cardPaymentBrick_container"
         initialization={{
@@ -538,11 +538,22 @@ function CardPaymentForm({
               theme: 'dark',
               customVariables: {
                 formBackgroundColor: '#0a0a0a',
+                inputBackgroundColor: 'rgba(255,255,255,0.05)',
+                textPrimaryColor: '#ffffff',
+                textSecondaryColor: '#9ca3af',
                 baseColor: '#00ff88',
                 baseColorFirstVariant: '#00cc6a',
                 baseColorSecondVariant: '#00cc6a',
                 errorColor: '#ef4444',
                 successColor: '#00ff88',
+                outlinePrimaryColor: 'rgba(0,255,136,0.5)',
+                outlineSecondaryColor: 'rgba(0,255,136,0.3)',
+                buttonTextColor: '#050505',
+                borderRadiusMedium: '12px',
+                borderRadiusLarge: '16px',
+                inputFocusedBoxShadow: '0 0 0 2px rgba(0,255,136,0.5)',
+                inputBorderWidth: '1px',
+                inputFocusedBorderWidth: '2px',
               },
             },
           },
