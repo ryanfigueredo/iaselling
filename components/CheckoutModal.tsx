@@ -653,10 +653,14 @@ function CardPaymentForm({
             const data = await response.json()
             if (data.error) {
               const errMsg = String(data.error)
+              const detail = data.detail || data.mpError?.message || ''
               if (errMsg.includes('payment_method_not_in_allowed_types')) {
                 throw new Error('Tipo de cartão não permitido. Verifique se está usando crédito ou débito corretamente.')
               }
-              throw new Error(errMsg)
+              if (errMsg.includes('invalid_token') || errMsg.includes('invalid credentials') || detail.includes('invalid')) {
+                throw new Error('Credenciais do Mercado Pago inválidas. Verifique se Public Key e Access Token são da MESMA aplicação e de produção.')
+              }
+              throw new Error(detail ? `${errMsg} (${detail})` : errMsg)
             }
             if (data.status === 'approved') onSuccess(data.id?.toString?.() || data.id)
             else {

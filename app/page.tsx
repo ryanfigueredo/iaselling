@@ -29,7 +29,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
-      <Header />
       <div className="relative">
         <Hero />
         <Features />

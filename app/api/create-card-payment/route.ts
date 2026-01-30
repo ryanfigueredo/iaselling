@@ -63,8 +63,14 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error('Erro ao criar pagamento com cartão:', error)
+    const msg = error.message || 'Erro ao processar pagamento'
+    const cause = error.cause?.message || error.cause?.response?.data?.message
     return NextResponse.json(
-      { error: error.message || 'Erro ao processar pagamento' },
+      {
+        error: msg,
+        ...(cause && { detail: cause }),
+        ...(error.cause?.response?.data && { mpError: error.cause.response.data }),
+      },
       { status: 500 }
     )
   }
