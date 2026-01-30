@@ -154,14 +154,19 @@ export default function BentoGrid() {
             initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-3 mb-8"
+            className="mb-8"
           >
-            <div className="w-10 h-10 rounded-xl bg-neon-green/15 border border-neon-green/30 flex items-center justify-center">
-              <Package className="w-5 h-5 text-neon-green" strokeWidth={1.75} />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-neon-green/15 border border-neon-green/30 flex items-center justify-center">
+                <Package className="w-5 h-5 text-neon-green" strokeWidth={1.75} />
+              </div>
+              <h3 className="font-display font-semibold text-2xl text-neon-green">
+                Solicitação Direta
+              </h3>
             </div>
-            <h3 className="font-display font-semibold text-2xl text-neon-green">
-              Solicitação Direta
-            </h3>
+            <p className="text-gray-400 text-sm max-w-2xl">
+              Limites diários por plataforma. Solicite via WhatsApp e nossa equipe libera o acesso no mesmo dia.
+            </p>
           </motion.div>
           
           <motion.div
