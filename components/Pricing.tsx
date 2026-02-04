@@ -12,7 +12,7 @@ import {
 import CheckoutModal from "./CheckoutModal";
 
 // Preço de venda (ajuste aqui quando necessário)
-const SELLING_PRICE = 80.0;
+const SELLING_PRICE = 119.0;
 
 const WHATSAPP_LINK =
   process.env.NEXT_PUBLIC_WHATSAPP_LINK || "https://wa.me/5521997624873";
